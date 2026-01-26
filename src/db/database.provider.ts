@@ -1,5 +1,6 @@
 import { Provider } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { PinoLogger } from 'nestjs-pino';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { Pool } from 'pg';
 import * as schema from './schema';
@@ -8,8 +9,10 @@ export const DRIZZLE_CLIENT = 'DRIZZLE_CLIENT';
 
 export const DatabaseProvider: Provider = {
     provide: DRIZZLE_CLIENT,
-    inject: [ConfigService],
-    useFactory: async (configService: ConfigService) => {
+    inject: [ConfigService, PinoLogger],
+    useFactory: async (configService: ConfigService, logger: PinoLogger) => {
+        logger.setContext('DatabaseProvider');
+
         const connectionString = configService.get<string>('DATABASE_URL');
         const pool = new Pool({
             connectionString,
@@ -18,10 +21,10 @@ export const DatabaseProvider: Provider = {
         // Quick connection test
         try {
             const client = await pool.connect();
-            console.log('Successfully connected to PostgreSQL');
+            logger.info('Successfully connected to PostgreSQL');
             client.release();
         } catch (e) {
-            console.error('Failed to connect to PostgreSQL:', e.message);
+            logger.error({ err: e }, 'Failed to connect to PostgreSQL');
             throw e;
         }
 
