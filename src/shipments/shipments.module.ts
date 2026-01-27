@@ -7,6 +7,6 @@ import { DatabaseModule } from '../db/database.module';
 @Module({
   imports: [DatabaseModule],
   controllers: [ShipmentsController],
-  providers: [ShipmentsService, ShipmentsRepository]
+  providers: [ShipmentsService, ShipmentsRepository],
 })
-export class ShipmentsModule { }
+export class ShipmentsModule {}

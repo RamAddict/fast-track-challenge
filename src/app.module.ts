@@ -19,4 +19,4 @@ import { loggerConfig } from './logger/logger.config';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}
