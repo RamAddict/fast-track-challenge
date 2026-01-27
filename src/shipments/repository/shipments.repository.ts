@@ -36,6 +36,22 @@ export class ShipmentsRepository {
     };
   }
 
+  async updateStatus(id: string, status: EShipmentStatus, lastSyncedAt: Date) {
+    return this.db
+      .update(schema.shipments)
+      .set({ status, lastSyncedAt })
+      .where(eq(schema.shipments.id, id))
+      .returning();
+  }
+
+  async getAllShipments() {
+    const results = await this.db.select().from(schema.shipments);
+    return results.map((shipment) => ({
+      ...shipment,
+      status: shipment.status as EShipmentStatus,
+    }));
+  }
+
   async findAll(options: FindAllOptions) {
     const { page, limit, status, customerName } = options;
     const offset = (page - 1) * limit;
