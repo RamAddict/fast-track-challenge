@@ -1,6 +1,7 @@
-import { Controller, Get, Post, Body, Param, ParseUUIDPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { ShipmentsService } from './shipments.service';
 import { CreateShipmentDto } from './dto/create-shipment.dto';
+import { QueryShipmentsDto } from './dto/query-shipments.dto';
 
 @Controller('shipments')
 export class ShipmentsController {
@@ -12,8 +13,8 @@ export class ShipmentsController {
     }
 
     @Get()
-    findAll() {
-        return this.shipmentsService.findAll();
+    findAll(@Query() query: QueryShipmentsDto) {
+        return this.shipmentsService.findAll(query);
     }
 
     @Get(':id')
