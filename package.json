@@ -20,7 +20,8 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "mock:carrier": "npx json-server json-server/db.json --port 3001 --routes json-server/routes.json"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
@@ -31,6 +32,7 @@
     "class-validator": "^0.14.3",
     "drizzle-kit": "^0.31.8",
     "drizzle-orm": "^0.45.1",
+    "json-server": "0.17.4",
     "nestjs-pino": "^4.5.0",
     "pg": "^8.17.2",
     "pino-http": "^11.0.0",

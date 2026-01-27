@@ -1,0 +1,4 @@
+{
+  "/carrier/shipments/:id": "/shipments/:id",
+  "/carrier/shipments": "/shipments"
+}

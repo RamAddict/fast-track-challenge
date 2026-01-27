@@ -1,0 +1,20 @@
+{
+  "shipments": [
+    {
+      "id": "c048f6f5-8a84-44c2-81c8-327c291370c8",
+      "orderId": "05ced874-3d16-4970-899e-950c7782b3e6",
+      "customerName": "Ana Clara",
+      "destination": "Rua das Flores, 123 - Rio de Janeiro, RJ, 20000-000",
+      "status": "in_transit",
+      "lastSyncedAt": "2026-01-27T18:15:00Z"
+    },
+    {
+      "id": "6e616ff3-5c13-4458-a1f4-8ba93689a652",
+      "orderId": "8ed6e0a5-bad8-4b98-a7ec-f20db759017e",
+      "customerName": "Pedro Henrique",
+      "destination": "Av. Paulista, 1000 - São Paulo, SP, 01310-100",
+      "status": "delivered",
+      "lastSyncedAt": "2026-01-27T14:30:00Z"
+    }
+  ]
+}
