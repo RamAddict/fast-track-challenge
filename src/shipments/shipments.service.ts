@@ -4,6 +4,7 @@ import { CreateShipmentDto } from './dto/create-shipment.dto';
 import { QueryShipmentsDto } from './dto/query-shipments.dto';
 import { ShipmentsRepository } from './repository/shipments.repository';
 import { IPaginatedShipments } from './interfaces/paginated-response.interface';
+import { CarrierService } from '../carrier/carrier.service';
 import { EShipmentStatus } from './interfaces/shipment.interface';
 
 @Injectable()
@@ -11,16 +12,30 @@ export class ShipmentsService {
   constructor(
     private readonly logger: PinoLogger,
     private readonly repository: ShipmentsRepository,
+    private readonly carrierService: CarrierService,
   ) {
     this.logger.setContext(ShipmentsService.name);
   }
 
   async create(dto: CreateShipmentDto) {
     this.logger.info(`Creating new shipment for order: ${dto.orderId}`);
-    return this.repository.create({
+    const [savedShipment] = await this.repository.create({
       ...dto,
       status: dto.status ?? 'pending',
     });
+
+    // if registerWithCarrier is true, register shipment with carrier
+    if (dto?.registerWithCarrier) {
+      await this.carrierService.registerShipment({
+        id: savedShipment.id,
+        orderId: savedShipment.orderId,
+        customerName: savedShipment.customerName,
+        destination: savedShipment.destination,
+        status: savedShipment.status,
+      });
+    }
+
+    return savedShipment;
   }
 
   async findAll(query: QueryShipmentsDto): Promise<IPaginatedShipments> {

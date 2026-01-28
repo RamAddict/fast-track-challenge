@@ -1,6 +1,7 @@
 import { IsOptional, IsEnum, IsString, IsInt, Min, Max } from 'class-validator';
 import { Type } from 'class-transformer';
-import { EShipmentStatus } from '../interfaces/shipment.interface';
+import { SHIPMENT_STATUS } from '../interfaces/shipment.interface';
+import type { EShipmentStatus } from '../interfaces/shipment.interface';
 
 export class QueryShipmentsDto {
   @IsOptional()
@@ -17,7 +18,7 @@ export class QueryShipmentsDto {
   limit?: number = 10;
 
   @IsOptional()
-  @IsEnum(EShipmentStatus)
+  @IsEnum(SHIPMENT_STATUS)
   status?: EShipmentStatus;
 
   @IsOptional()

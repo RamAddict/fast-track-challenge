@@ -30,10 +30,7 @@ export class ShipmentsRepository {
 
     if (!result) return undefined;
 
-    return {
-      ...result,
-      status: result.status as EShipmentStatus,
-    };
+    return result;
   }
 
   async updateStatus(id: string, status: EShipmentStatus, lastSyncedAt: Date) {
@@ -45,11 +42,7 @@ export class ShipmentsRepository {
   }
 
   async getAllShipments() {
-    const results = await this.db.select().from(schema.shipments);
-    return results.map((shipment) => ({
-      ...shipment,
-      status: shipment.status as EShipmentStatus,
-    }));
+    return this.db.select().from(schema.shipments);
   }
 
   async findAll(options: FindAllOptions) {
@@ -91,11 +84,8 @@ export class ShipmentsRepository {
     // Extract total from first row, or 0 if no results
     const total = results.length > 0 ? Number(results[0].totalCount) : 0;
 
-    // Remove the totalCount from each row and cast status to enum
-    const data = results.map(({ totalCount, ...shipment }) => ({
-      ...shipment,
-      status: shipment.status as EShipmentStatus,
-    }));
+    // Remove the totalCount from each row
+    const data = results.map(({ totalCount, ...shipment }) => shipment);
 
     return {
       data,

@@ -4,8 +4,10 @@ import {
   IsEnum,
   IsOptional,
   MaxLength,
+  IsBoolean,
 } from 'class-validator';
-import { EShipmentStatus } from '../interfaces/shipment.interface';
+import { SHIPMENT_STATUS } from '../interfaces/shipment.interface';
+import type { EShipmentStatus } from '../interfaces/shipment.interface';
 
 export class CreateShipmentDto {
   @IsString()
@@ -23,7 +25,11 @@ export class CreateShipmentDto {
   @MaxLength(500)
   destination: string;
 
-  @IsEnum(EShipmentStatus)
+  @IsEnum(SHIPMENT_STATUS)
   @IsOptional()
   status?: EShipmentStatus;
+
+  @IsOptional()
+  @IsBoolean()
+  registerWithCarrier = false;
 }
