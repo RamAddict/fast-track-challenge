@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import { ShipmentsModule } from './shipments/shipments.module';
 import { DatabaseModule } from './db/database.module';
 import { loggerConfig } from './logger/logger.config';
+import { QueueModule } from './queue/queue.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { loggerConfig } from './logger/logger.config';
       isGlobal: true,
     }),
     LoggerModule.forRoot(loggerConfig),
+    QueueModule,
     DatabaseModule,
     ShipmentsModule,
   ],

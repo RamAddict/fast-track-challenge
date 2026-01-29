@@ -3,12 +3,12 @@ import { ShipmentsController } from './shipments.controller';
 import { SyncController } from '../sync.controller';
 import { ShipmentsService } from './shipments.service';
 import { ShipmentsRepository } from './repository/shipments.repository';
-import { CarrierService } from '../carrier/carrier.service';
-import { DatabaseModule } from 'src/db/database.module';
+import { DatabaseModule } from '../db/database.module';
+import { CarrierModule } from '../carrier/carrier.module';
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [DatabaseModule, CarrierModule],
   controllers: [ShipmentsController, SyncController],
-  providers: [ShipmentsService, ShipmentsRepository, CarrierService],
+  providers: [ShipmentsService, ShipmentsRepository],
 })
 export class ShipmentsModule {}
