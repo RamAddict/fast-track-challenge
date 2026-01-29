@@ -41,6 +41,18 @@ export class ShipmentsRepository {
       .returning();
   }
 
+  async updateStatusByOrderId(
+    orderId: string,
+    status: EShipmentStatus,
+    lastSyncedAt: Date,
+  ) {
+    return this.db
+      .update(schema.shipments)
+      .set({ status, lastSyncedAt })
+      .where(eq(schema.shipments.orderId, orderId))
+      .returning();
+  }
+
   async getAllShipments() {
     return this.db.select().from(schema.shipments);
   }

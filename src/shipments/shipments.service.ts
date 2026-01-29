@@ -79,32 +79,35 @@ export class ShipmentsService {
     for (const shipment of shipments) {
       try {
         const response = await fetch(
-          `http://localhost:3001/carrier/shipments/${shipment.id}`,
+          `http://localhost:3001/carrier/shipments/${shipment.orderId}`,
         );
 
         if (!response.ok) {
           this.logger.warn(
-            `Failed to fetch status for shipment ${shipment.id}: ${response.statusText}`,
+            `Failed to fetch status for shipment ${shipment.orderId}: ${response.statusText}`,
           );
           failedCount++;
           continue;
         }
 
         const data = (await response.json()) as any;
+        this.logger.debug(
+          `data.status && data.status !== shipment.status ${JSON.stringify(data)} ${JSON.stringify(shipment)}`,
+        );
 
         if (data.status && data.status !== shipment.status) {
           this.logger.info(
-            `Updating shipment ${shipment.id} status from ${shipment.status} to ${data.status}`,
+            `Updating shipment ${shipment.orderId} status from ${shipment.status} to ${data.status}`,
           );
-          await this.repository.updateStatus(
-            shipment.id,
+          await this.repository.updateStatusByOrderId(
+            shipment.orderId,
             data.status as EShipmentStatus,
             new Date(),
           );
           updatedCount++;
         }
       } catch (error) {
-        this.logger.error(error, `Error syncing shipment ${shipment.id}`);
+        this.logger.error(error, `Error syncing shipment ${shipment.orderId}`);
         failedCount++;
       }
     }

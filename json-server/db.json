@@ -1,20 +1,22 @@
 {
   "shipments": [
     {
-      "id": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
-      "orderId": "ORD-2026-001",
+      "id": "ORD-2026-001",
       "customerName": "Maria Silva",
       "destination": "Rua das Flores, 123 - Rio de Janeiro, RJ, 20000-000",
-      "status": "in_transit",
-      "lastSyncedAt": "2026-01-27T18:15:00Z"
+      "status": "delivered"
     },
     {
-      "id": "b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e",
-      "orderId": "ORD-2026-002",
+      "id": "ORD-2026-002",
       "customerName": "João Santos",
       "destination": "Av. Paulista, 1000 - São Paulo, SP, 01310-100",
-      "status": "delivered",
-      "lastSyncedAt": "2026-01-27T14:30:00Z"
+      "status": "in_transit"
+    },
+    {
+      "id": "test",
+      "customerName": "cancian",
+      "destination": "mars",
+      "status": "in_transit"
     }
   ]
 }
