@@ -64,4 +64,53 @@ describe('ShipmentsService', () => {
       service.create(shipment as CreateShipmentDto),
     ).resolves.toEqual(shipment);
   });
+
+  it('should find all shipments', async () => {
+    const shipments = [
+      {
+        orderId: '1',
+        customerName: 'John Doe',
+        destination: 'mars',
+        status: 'pending',
+      },
+      {
+        orderId: '2',
+        customerName: 'Jane Doe',
+        destination: 'venus',
+        status: 'pending',
+      },
+    ];
+
+    (repository.findAll as jest.Mock).mockResolvedValue({
+      data: shipments,
+      total: 2,
+    });
+
+    const expectedResult = {
+      data: shipments,
+      meta: {
+        total: 2,
+        page: 1,
+        limit: 10,
+        totalPages: 1,
+      },
+    };
+
+    await expect(service.findAll({ page: 1, limit: 10 })).resolves.toEqual(
+      expectedResult,
+    );
+  });
+
+  it('should find one shipment', async () => {
+    const shipment = {
+      orderId: '1',
+      customerName: 'John Doe',
+      destination: 'mars',
+      status: 'pending',
+    };
+
+    (repository.findById as jest.Mock).mockResolvedValue(shipment);
+
+    await expect(service.findOne('1')).resolves.toEqual(shipment);
+  });
 });
