@@ -113,4 +113,124 @@ describe('ShipmentsService', () => {
 
     await expect(service.findOne('1')).resolves.toEqual(shipment);
   });
+
+  it('should sync shipments with carrier (with no updates)', async () => {
+    const shipments = [
+      {
+        orderId: '1',
+        customerName: 'John Doe',
+        destination: 'mars',
+        status: 'pending',
+      },
+      {
+        orderId: '2',
+        customerName: 'Jane Doe',
+        destination: 'venus',
+        status: 'pending',
+      },
+    ];
+
+    (repository.getAllShipments as jest.Mock).mockResolvedValue(shipments);
+
+    // mock date to prevent test failure due to time difference
+    const date = new Date();
+    jest.spyOn(global, 'Date').mockImplementation(() => date as any);
+
+    // mock carrier fetch
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      json: jest.fn().mockResolvedValue({
+        status: 'pending',
+      }),
+    });
+
+    const expectedResult = {
+      total: 2,
+      updated: 0,
+      failed: 0,
+      timestamp: date,
+    };
+
+    await expect(service.syncWithCarrier()).resolves.toEqual(expectedResult);
+  });
+
+  it('should sync shipments with carrier (with updates)', async () => {
+    const shipments = [
+      {
+        orderId: '1',
+        customerName: 'John Doe',
+        destination: 'mars',
+        status: 'pending',
+      },
+      {
+        orderId: '2',
+        customerName: 'Jane Doe',
+        destination: 'venus',
+        status: 'pending',
+      },
+    ];
+
+    (repository.getAllShipments as jest.Mock).mockResolvedValue(shipments);
+
+    // mock date to prevent test failure due to time difference
+    const date = new Date();
+    jest.spyOn(global, 'Date').mockImplementation(() => date as any);
+
+    // mock carrier fetch
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      json: jest.fn().mockResolvedValue({
+        status: 'in_transit',
+      }),
+    });
+
+    const expectedResult = {
+      total: 2,
+      updated: 2,
+      failed: 0,
+      timestamp: date,
+    };
+
+    await expect(service.syncWithCarrier()).resolves.toEqual(expectedResult);
+  });
+
+  it('should sync shipments with carrier (with failures)', async () => {
+    const shipments = [
+      {
+        orderId: '1',
+        customerName: 'John Doe',
+        destination: 'mars',
+        status: 'pending',
+      },
+      {
+        orderId: '2',
+        customerName: 'Jane Doe',
+        destination: 'venus',
+        status: 'pending',
+      },
+    ];
+
+    (repository.getAllShipments as jest.Mock).mockResolvedValue(shipments);
+
+    // mock date to prevent test failure due to time difference
+    const date = new Date();
+    jest.spyOn(global, 'Date').mockImplementation(() => date as any);
+
+    // mock carrier fetch
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: false,
+      json: jest.fn().mockResolvedValue({
+        status: 'in_transit',
+      }),
+    });
+
+    const expectedResult = {
+      total: 2,
+      updated: 0,
+      failed: 2,
+      timestamp: date,
+    };
+
+    await expect(service.syncWithCarrier()).resolves.toEqual(expectedResult);
+  });
 });
