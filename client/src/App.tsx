@@ -33,6 +33,7 @@ const getStatusClasses = (status: EShipmentStatus) =>
 
 function App() {
   const [shipments, setShipments] = useState<IShipment[]>([]);
+  const [search, setSearch] = useState<string>('');
   const apiBase = import.meta.env.VITE_API_BASE_URL ?? '';
   const apiBaseNormalized = apiBase.replace(/\/$/, '');
   const shipmentsUrl = apiBaseNormalized
@@ -40,7 +41,10 @@ function App() {
     : '/shipments';
 
   useEffect(() => {
-    fetch(shipmentsUrl)
+    fetch(
+      shipmentsUrl +
+        (search ? `?customerName=${encodeURIComponent(search)}` : ''),
+    )
       .then(async (response) => {
         if (!response.ok) {
           const text = await response.text();
@@ -52,14 +56,41 @@ function App() {
       })
       .then((result) => setShipments(result.data))
       .catch((error) => console.error('Failed to load shipments', error));
-  }, [shipmentsUrl]);
+  }, [shipmentsUrl, search]);
 
   return (
     <>
-      <h1 className="text-4xl font-semibold">
+      <h1 className="text-4xl font-semibold pt-2 pb-8">
         Current Shipments for fast-track-challenge
       </h1>
-      <div className="overflow-x-auto pt-12">
+
+      <label className="input">
+        <svg
+          className="h-[1em] opacity-50"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+        >
+          <g
+            strokeLinejoin="round"
+            strokeLinecap="round"
+            strokeWidth="2.5"
+            fill="none"
+            stroke="currentColor"
+          >
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.3-4.3"></path>
+          </g>
+        </svg>
+        <input
+          onChange={(e) => setSearch(e.target.value)}
+          type="search"
+          aria-label="Search by customer name"
+          required
+          placeholder="Search by customer name"
+        />
+      </label>
+
+      <div className="overflow-x-auto pt-4">
         <table className="table">
           <thead>
             <tr>
@@ -78,7 +109,9 @@ function App() {
                 <td>{shipment.customerName}</td>
                 <td>{shipment.destination}</td>
                 <td>
-                  <span className={`badge ${getStatusClasses(shipment.status)}`}>
+                  <span
+                    className={`badge ${getStatusClasses(shipment.status)}`}
+                  >
                     {shipment.status}
                   </span>
                 </td>
