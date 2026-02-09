@@ -49,29 +49,51 @@ function App() {
       <h1 className="text-4xl font-semibold">
         Current Shipments for fast-track-challenge
       </h1>
-      <div className="p-4 gap-2 flex flex-col">
-        {shipments.map((shipment) => (
-          <div key={shipment.id} className="border">
-            <h3 className="text-xl font-bold">{shipment.id}</h3>
-            <p>
-              <b>Customer name: </b>
-              {shipment.customerName}
-            </p>
-            <p>
-              <b>Destination:</b> {shipment.destination}
-            </p>
-            <p>
-              <b>Status:</b> {shipment.status}
-            </p>
-            <p>
-              <b>Last Synced At: </b>
-              {new Date(shipment.lastSyncedAt).toLocaleString()}
-            </p>
-            <p>
-              <b>Created </b>At: {new Date(shipment.createdAt).toLocaleString()}
-            </p>
-          </div>
-        ))}
+      <div className="overflow-x-auto pt-12">
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Shipment Id</th>
+              <th>Customer Name</th>
+              <th>Destination</th>
+              <th>status</th>
+              <th>last synced at</th>
+              <th>Created At</th>
+            </tr>
+          </thead>
+          <tbody>
+            {shipments.map((shipment) => (
+              <tr key={shipment.id} className="border">
+                <td className=" font-bold">{shipment.id}</td>
+                <td>
+                  {shipment.customerName}
+                </td>
+                <td>
+                  {shipment.destination}
+                </td>
+                <td>
+                  {shipment.status}
+                </td>
+                <td>
+                  {new Date(shipment.lastSyncedAt).toLocaleString()}
+                </td>
+                <td>
+                  {new Date(shipment.createdAt).toLocaleString()}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+          <tfoot>
+            <tr>
+              <th></th>
+              <th>Customer Name</th>
+              <th>Destination</th>
+              <th>status</th>
+              <th>last synced at</th>
+              <th>Created At</th>
+            </tr>
+          </tfoot>
+        </table>
       </div>
     </>
   );
