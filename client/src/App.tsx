@@ -21,6 +21,16 @@ export interface IShipment {
   createdAt: Date;
 }
 
+const statusClassMap: Record<EShipmentStatus, string> = {
+  [SHIPMENT_STATUS.PENDING]: 'bg-amber-100 text-amber-800',
+  [SHIPMENT_STATUS.IN_TRANSIT]: 'bg-blue-100 text-blue-800',
+  [SHIPMENT_STATUS.DELIVERED]: 'bg-green-100 text-green-800',
+  [SHIPMENT_STATUS.FAILED]: 'bg-red-100 text-red-800',
+};
+
+const getStatusClasses = (status: EShipmentStatus) =>
+  statusClassMap[status] ?? 'bg-gray-100 text-gray-800';
+
 function App() {
   const [shipments, setShipments] = useState<IShipment[]>([]);
   const apiBase = import.meta.env.VITE_API_BASE_URL ?? '';
@@ -65,21 +75,15 @@ function App() {
             {shipments.map((shipment) => (
               <tr key={shipment.id} className="border">
                 <td className=" font-bold">{shipment.id}</td>
+                <td>{shipment.customerName}</td>
+                <td>{shipment.destination}</td>
                 <td>
-                  {shipment.customerName}
+                  <span className={`badge ${getStatusClasses(shipment.status)}`}>
+                    {shipment.status}
+                  </span>
                 </td>
-                <td>
-                  {shipment.destination}
-                </td>
-                <td>
-                  {shipment.status}
-                </td>
-                <td>
-                  {new Date(shipment.lastSyncedAt).toLocaleString()}
-                </td>
-                <td>
-                  {new Date(shipment.createdAt).toLocaleString()}
-                </td>
+                <td>{new Date(shipment.lastSyncedAt).toLocaleString()}</td>
+                <td>{new Date(shipment.createdAt).toLocaleString()}</td>
               </tr>
             ))}
           </tbody>
