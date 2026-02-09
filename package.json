@@ -8,6 +8,8 @@
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "build:all": "npm run build:client && npm run build",
+    "build:client": "npm run build:client",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
@@ -31,6 +33,7 @@
     "@nestjs/core": "^11.0.1",
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/schedule": "^6.1.0",
+    "@nestjs/serve-static": "^5.0.4",
     "bullmq": "^5.67.2",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.3",
