@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
+import { buildShipmentsUrl, shipmentsBaseUrl } from './api/shipments';
 
 export const SHIPMENT_STATUS = {
   PENDING: 'pending',
@@ -41,17 +42,8 @@ function App() {
     status: SHIPMENT_STATUS.PENDING as EShipmentStatus,
   });
 
-  const apiBase = import.meta.env.VITE_API_BASE_URL ?? '';
-  const apiBaseNormalized = apiBase.replace(/\/$/, '');
-  const shipmentsUrl = apiBaseNormalized
-    ? `${apiBaseNormalized}/shipments`
-    : '/shipments';
-
   useEffect(() => {
-    fetch(
-      shipmentsUrl +
-        (search ? `?customerName=${encodeURIComponent(search)}` : ''),
-    )
+    fetch(buildShipmentsUrl(search))
       .then(async (response) => {
         if (!response.ok) {
           const text = await response.text();
@@ -63,12 +55,12 @@ function App() {
       })
       .then((result) => setShipments(result.data))
       .catch((error) => console.error('Failed to load shipments', error));
-  }, [shipmentsUrl, search]);
+  }, [search]);
 
   const handleSubmit = async (e: React.SubmitEvent) => {
     e.preventDefault();
 
-    const response = await fetch(shipmentsUrl, {
+    const response = await fetch(shipmentsBaseUrl, {
       body: JSON.stringify(form),
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -81,22 +73,19 @@ function App() {
       return;
     }
     // reset form
-        setForm({
+    setForm({
       orderId: '',
       customerName: '',
       destination: '',
       status: SHIPMENT_STATUS.PENDING,
     });
-    // close it 
+    // close it
     (document.getElementById('my_modal_1') as HTMLDialogElement)?.close();
     await refreshShipments();
   };
 
   const refreshShipments = async () => {
-    const response = await fetch(
-      shipmentsUrl +
-        (search ? `?customerName=${encodeURIComponent(search)}` : ''),
-    );
+    const response = await fetch(buildShipmentsUrl(search));
     const result = await response.json();
     setShipments(result.data);
   };
